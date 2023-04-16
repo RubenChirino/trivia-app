@@ -54,7 +54,7 @@ public class QuizGenerator {
         String subject = "Topic: " + topic.toString().toLowerCase();
 
         String prompt = String.format("Generate a random question about general culture and three answer options (classified with the letters A, B, and C, being only one the correct answer), and the letter of the correct option. %s, %s", subject, level);
-        String apiKey = "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"; // System.getenv("OPENAI_API_KEY")
+        String apiKey = System.getenv("OPENAI_API_KEY");
         String model = "text-curie:001"; // text-curie:001 | text-davinci-003
         int maxTokens = 200;
         int optionsNumber = 1; // number of answer options
