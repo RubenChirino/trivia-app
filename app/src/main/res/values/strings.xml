@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Trivia</string>
+    <string name="btn_select">Select</string>
+    <string name="btn_send">Send</string>
+    <string name="btn_play">Play</string>
+    <string name="input_name">Choose a Name</string>
+    <string name="text_guide">Guide</string>
+    <string name="text_greeting">Hi</string>
+    <string name="text_presentation">the following are the game rules</string>
+    <string name="text_rule_1">1- A random question will be asked.</string>
+    <string name="text_rule_2">2- You will have 1 minute to respond.</string>
+    <string name="text_rule_3">3- Each time you answer a question correctly you will earn 1+ point and a new question will be assigned.</string>
+    <string name="text_rule_4">4- When you answer a question incorrectly the game will end with your final score for questions answered correctly.</string>
+    <string name="welcome_message">%1$s %2$s, %3$s:</string>
+</resources>
