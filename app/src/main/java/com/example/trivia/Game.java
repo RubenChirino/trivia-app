@@ -3,8 +3,11 @@ package com.example.trivia;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.widget.Button;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -13,28 +16,30 @@ import android.widget.RadioButton;
 public class Game extends AppCompatActivity {
 
     // Elements
-    TextView textView_question;
-    RadioGroup radioGroup_options;
-    RadioButton radioButton_optionA;
-    RadioButton radioButton_optionB;
-    RadioButton radioButton_optionC;
-    Button btn_send;
+    private TextView textView_question;
+    private RadioGroup radioGroup_options;
+    private RadioButton radioButton_optionA;
+    private RadioButton radioButton_optionB;
+    private RadioButton radioButton_optionC;
+    private Button btn_send;
 
     // Values
-    QuizQuestion val_quiz = QuizGenerator.generateQuizQuestion(QuizGenerator.getAleatoryDifficulty(), QuizGenerator.getAleatoryTopic());
-    char selectedOption;
-    boolean isCorrect;
+    private QuizQuestion val_quiz;
+    private char selectedOption;
+    private boolean isCorrect;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
-        System.out.println("val_quiz => " + val_quiz);
-        System.out.println("");
-        System.out.println("Option A => " + val_quiz.getOptionA());
-        System.out.println("Option B => " + val_quiz.getOptionB());
-        System.out.println("Option C => " + val_quiz.getOptionC());
+//        val_quiz = QuizGenerator.generateQuizQuestion(QuizGenerator.getAleatoryDifficulty(), QuizGenerator.getAleatoryTopic());
+//
+//        System.out.println("val_quiz => " + val_quiz);
+//        System.out.println("");
+//        System.out.println("Option A => " + val_quiz.getOptionA());
+//        System.out.println("Option B => " + val_quiz.getOptionB());
+//        System.out.println("Option C => " + val_quiz.getOptionC());
 
         // Find elements
         radioGroup_options = findViewById(R.id.radioGroup_options);
@@ -45,12 +50,12 @@ public class Game extends AppCompatActivity {
         btn_send = findViewById(R.id.button_sendAnswer);
 
         // Set Values & Methods
-        textView_question.setText(val_quiz.getQuestion());
-        radioButton_optionA.setText(val_quiz.getOptionA());
-        radioButton_optionB.setText(val_quiz.getOptionB());
-        radioButton_optionC.setText(val_quiz.getOptionC());
-
         btn_send.setEnabled(false);
+
+//        textView_question.setText(val_quiz.getQuestion());
+//        radioButton_optionA.setText(val_quiz.getOptionA());
+//        radioButton_optionB.setText(val_quiz.getOptionB());
+//        radioButton_optionC.setText(val_quiz.getOptionC());
 
         radioGroup_options.setOnCheckedChangeListener((group, checkedId) -> {
             if (!btn_send.isEnabled()) {
@@ -68,5 +73,26 @@ public class Game extends AppCompatActivity {
             intent.putExtra("win", isCorrect);
             startActivity(intent);
         });
+
+        // Generate quiz question in a thread
+        new Thread(() -> {
+            val_quiz = QuizGenerator.generateQuizQuestion(QuizGenerator.getAleatoryDifficulty(), QuizGenerator.getAleatoryTopic());
+
+            // Update UI in main thread
+            new Handler(Looper.getMainLooper()).post(() -> {
+
+                System.out.println("val_quiz => " + val_quiz);
+                System.out.println("");
+                System.out.println("Option A => " + val_quiz.getOptionA());
+                System.out.println("Option B => " + val_quiz.getOptionB());
+                System.out.println("Option C => " + val_quiz.getOptionC());
+
+                // Set question and options
+                textView_question.setText(val_quiz.getQuestion());
+                radioButton_optionA.setText(val_quiz.getOptionA());
+                radioButton_optionB.setText(val_quiz.getOptionB());
+                radioButton_optionC.setText(val_quiz.getOptionC());
+            });
+        }).start();
     }
 }

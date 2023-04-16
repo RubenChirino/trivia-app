@@ -8,13 +8,8 @@ import android.widget.TextView;
 
 public class AnswerResult extends AppCompatActivity {
 
-    Intent intent = getIntent();
-
     // Elements
     TextView textView_answerResultTitle;
-
-    // Values
-    boolean val_win = true; // intent.getBooleanExtra("win")
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +18,10 @@ public class AnswerResult extends AppCompatActivity {
 
         // Find elements
         textView_answerResultTitle = findViewById(R.id.textView_answerResultTitle);
+
+        // Get the intent and extract the name
+        Intent intent = getIntent();
+        boolean val_win = true; // intent.getBooleanExtra("win")
 
         // Set Values & Methods
         textView_answerResultTitle.setText(val_win ? "Correct ✅" : "Incorrect ❌");

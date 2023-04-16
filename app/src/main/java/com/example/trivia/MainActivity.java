@@ -10,16 +10,13 @@ import android.widget.Button;
 import android.widget.EditText;
 
 
-import com.google.android.material.textfield.TextInputLayout;
+import com.google.android.material.textfield.TextInputEditText;
 
 public class MainActivity extends AppCompatActivity {
 
     // Elements
     Button btn_selectName;
-    TextInputLayout textInput_name;
-
-//    AlertDialog.Builder alert = new AlertDialog.Builder(this);
-//    alert.set
+    TextInputEditText textInput_name;
 
     // Values
     String val_name;
@@ -41,22 +38,18 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        EditText editTextName = textInput_name.getEditText();
-
-        if (editTextName != null) {
-            editTextName.addTextChangedListener(new TextWatcher() {
+        textInput_name.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    val_name = textInput_name.getEditText().getText().toString();
+                    val_name = textInput_name.getText().toString();
                 }
 
                 public void afterTextChanged(Editable s) {
-                    btn_selectName.setEnabled(!textInput_name.getEditText().getText().toString().isEmpty());
+                    btn_selectName.setEnabled(!textInput_name.getText().toString().isEmpty());
                 }
-            });
-        }
+        });
     }
 }
