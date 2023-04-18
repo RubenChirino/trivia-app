@@ -3,6 +3,7 @@
     <string name="btn_select">Select</string>
     <string name="btn_send">Send</string>
     <string name="btn_play">Play</string>
+    <string name="btn_playAgain">Play again</string>
     <string name="input_name">Choose a Name</string>
     <string name="text_guide">Guide</string>
     <string name="text_greeting">Hi</string>

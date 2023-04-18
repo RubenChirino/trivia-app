@@ -54,7 +54,7 @@ public class QuizGenerator {
         String subject = "Topic: " + topic.toString().toLowerCase();
 
         String prompt = String.format("Generate a random question about general culture and three answer options (classified with the letters A, B, and C, being only one the correct answer), and the letter of the correct option. %s, %s", subject, level);
-        String apiKey = System.getenv("OPENAI_API_KEY");
+        String apiKey = System.getenv("OPENAI_API_KEY_2");
         String model = "text-curie:001"; // text-curie:001 | text-davinci-003
         int maxTokens = 200;
         int optionsNumber = 1; // number of answer options
@@ -64,8 +64,11 @@ public class QuizGenerator {
             throw new Error("No OPEN AI Key provided");
         }
 
+        System.out.println("apiKey => " + apiKey);
+
 //        String response = openAiLibrary(apiKey, prompt, model, maxTokens, optionsNumber);
-        String response = openAiRequest(apiKey, prompt, model, maxTokens, temperature);
+//        String response = openAiRequest(apiKey, prompt, model, maxTokens, temperature);
+        String response = cohereAiRequest(apiKey, prompt, maxTokens);
 
         System.out.println("response (OPEN AI) => " + response);
 
@@ -150,6 +153,83 @@ public class QuizGenerator {
                 JSONArray jsonArray = null;
                 try {
                     jsonArray = jsonObject.getJSONArray("choices");
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+
+                System.out.println("jsonArray => " + jsonArray);
+
+                try {
+                    result[0] = jsonArray.getJSONObject(0).getString("text");
+
+                    System.out.println("THEN => " + result[0]);
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+
+        return result[0];
+    }
+
+    private static String cohereAiRequest(String apiKey, String prompt, int maxTokens) {
+//        AsyncHttpClient client = new DefaultAsyncHttpClient();
+//        client.prepare("POST", "https://api.cohere.ai/v1/generate")
+//                .setHeader("accept", "application/json")
+//                .setHeader("content-type", "application/json")
+//                .setHeader("authorization", "Bearer ")
+//                .setBody("{\"max_tokens\":20,\"return_likelihoods\":\"NONE\",\"truncate\":\"END\",\"prompt\":\"Once upon a time in a magical land called\"}")
+//                .execute()
+//                .toCompletableFuture()
+//                .thenAccept(System.out::println)
+//                .join();
+//
+//        client.close();
+
+        JSONObject jsonBody = new JSONObject();
+        try {
+            jsonBody.put("prompt", prompt);
+            jsonBody.put("truncate", "END");
+            jsonBody.put("max_tokens", maxTokens);
+            jsonBody.put("return_likelihoods", "NONE");
+        } catch (JSONException error) {
+            error.printStackTrace();
+        }
+
+        RequestBody body = RequestBody.create(jsonBody.toString(), JSON) ;
+        Request request = new Request.Builder()
+                .url("https://api.cohere.ai/v1/generate")
+                .header("Authorization", "Bearer " + apiKey)
+                .post(body)
+                .build();
+
+        final String[] result = new String[1];
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+
+                System.out.println("onFailure => " + e.getMessage());
+
+                result[0] = e.getMessage();
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+
+                System.out.println("onResponse => " + response);
+
+                JSONObject jsonObject = null;
+                try {
+                    jsonObject = new JSONObject(response.body().string());
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+
+                System.out.println("jsonObject => " + jsonObject);
+
+                JSONArray jsonArray = null;
+                try {
+                    jsonArray = jsonObject.getJSONArray("generations");
                 } catch (JSONException e) {
                     throw new RuntimeException(e);
                 }

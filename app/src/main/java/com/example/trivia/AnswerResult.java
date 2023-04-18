@@ -4,12 +4,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.TextView;
 
 public class AnswerResult extends AppCompatActivity {
 
     // Elements
     TextView textView_answerResultTitle;
+    Button button_playAgain;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,10 +23,21 @@ public class AnswerResult extends AppCompatActivity {
 
         // Get the intent and extract the name
         Intent intent = getIntent();
-        boolean val_win = true; // intent.getBooleanExtra("win")
+        boolean isCorrect = intent.getBooleanExtra("isCorrect", false);
+        System.out.println("isCorrect => " + "isCorrect");
 
         // Set Values & Methods
-        textView_answerResultTitle.setText(val_win ? "Correct ✅" : "Incorrect ❌");
+        textView_answerResultTitle.setText(isCorrect ? "Correct ✅" : "Incorrect ❌");
+
+
+        // Find elements
+        button_playAgain = findViewById(R.id.button_playAgain);
+
+        // Set Values & Methods
+        button_playAgain.setOnClickListener(view -> {
+            Intent next = new Intent(AnswerResult.this, Game.class);
+            startActivity(next);
+        });
 
     }
 }

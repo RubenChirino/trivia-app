@@ -19,6 +19,8 @@ public class Guide extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_guide);
 
+        System.out.println("GUIDE PAGE");
+
         // Find elements
         btn_play = findViewById(R.id.btn_play);
         textView_welcome = findViewById(R.id.textView_rule1);
