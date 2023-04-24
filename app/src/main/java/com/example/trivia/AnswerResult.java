@@ -11,6 +11,7 @@ public class AnswerResult extends AppCompatActivity {
 
     // Elements
     TextView textView_answerResultTitle;
+    TextView textView_score;
     Button button_playAgain;
 
     @Override
@@ -18,17 +19,28 @@ public class AnswerResult extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_answer_result);
 
+        Global app = (Global) getApplication();
+        int score = app.getScore();
+
         // Find elements
         textView_answerResultTitle = findViewById(R.id.textView_answerResultTitle);
+        textView_score = findViewById(R.id.textView_score);
 
         // Get the intent and extract the name
         Intent intent = getIntent();
         boolean isCorrect = intent.getBooleanExtra("isCorrect", false);
-        System.out.println("isCorrect => " + "isCorrect");
 
         // Set Values & Methods
-        textView_answerResultTitle.setText(isCorrect ? "Correct ✅" : "Incorrect ❌");
+        if (isCorrect) {
+            app.setScore(score+=1);
+            textView_answerResultTitle.setText("Correct ✅");
 
+        } else {
+            app.setScore(0);
+            textView_answerResultTitle.setText("Incorrect ❌");
+        }
+
+        textView_score.setText("Your Score: " + score);
 
         // Find elements
         button_playAgain = findViewById(R.id.button_playAgain);

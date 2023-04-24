@@ -12,5 +12,10 @@
     <string name="text_rule_2">2- You will have 1 minute to respond.</string>
     <string name="text_rule_3">3- Each time you answer a question correctly you will earn 1+ point and a new question will be assigned.</string>
     <string name="text_rule_4">4- When you answer a question incorrectly the game will end with your final score for questions answered correctly.</string>
+    <string name="text_score">Your Score: %1$s</string>
+    <string name="text_welcome">Welcome</string>
     <string name="welcome_message">%1$s %2$s, %3$s:</string>
+    <string name="spinner_language">Select a language</string>
+    <string name="spinner_topic">Select topic</string>
+    <string name="spinner_difficulty">Select difficulty</string>
 </resources>

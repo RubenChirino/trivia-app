@@ -6,27 +6,70 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <Button
-        android:id="@+id/btn_selectName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/btn_select"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <TextView
+        android:id="@+id/textView_welcomeTitle"
+        android:layout_width="104dp"
+        android:layout_height="33dp"
+        android:layout_marginBottom="52dp"
+        android:text="@string/text_welcome"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/textInput_name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textInput_name"
-        app:layout_constraintVertical_bias="0.136" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/textInput_name"
         android:layout_width="254dp"
         android:layout_height="51dp"
-        android:layout_marginTop="292dp"
         android:hint="@string/input_name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        tools:layout_editor_absoluteY="243dp" />
+
+    <Spinner
+        android:id="@+id/spinner_languages"
+        android:layout_width="253dp"
+        android:layout_height="47dp"
+        android:layout_marginTop="36dp"
+        android:prompt="@string/spinner_language"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textInput_name" />
+
+    <Spinner
+        android:id="@+id/spinner_topic"
+        android:layout_width="253dp"
+        android:layout_height="47dp"
+        android:layout_marginTop="36dp"
+        android:prompt="@string/spinner_topic"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spinner_languages" />
+
+    <Spinner
+        android:id="@+id/spinner_difficulty"
+        android:layout_width="253dp"
+        android:layout_height="47dp"
+        android:layout_marginTop="36dp"
+        android:prompt="@string/spinner_difficulty"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spinner_topic" />
+
+    <Button
+        android:id="@+id/btn_selectName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="96dp"
+        android:text="@string/btn_select"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spinner_difficulty"
+        app:layout_constraintVertical_bias="0.869" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

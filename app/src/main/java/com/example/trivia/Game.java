@@ -36,7 +36,6 @@ public class Game extends AppCompatActivity {
     private Button btn_send;
 
     // Values
-    private String val_quiz;
     private char selectedOption;
     private boolean isCorrect;
     public static final MediaType JSON
@@ -47,14 +46,6 @@ public class Game extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
-
-//        val_quiz = QuizGenerator.generateQuizQuestion(QuizGenerator.getAleatoryDifficulty(), QuizGenerator.getAleatoryTopic());
-//
-//        System.out.println("val_quiz => " + val_quiz);
-//        System.out.println("");
-//        System.out.println("Option A => " + val_quiz.getOptionA());
-//        System.out.println("Option B => " + val_quiz.getOptionB());
-//        System.out.println("Option C => " + val_quiz.getOptionC());
 
         // Find elements
         radioGroup_options = findViewById(R.id.radioGroup_options);
@@ -67,50 +58,19 @@ public class Game extends AppCompatActivity {
         // Set Values & Methods
         btn_send.setEnabled(false);
 
-//        textView_question.setText(val_quiz.getQuestion());
-//        radioButton_optionA.setText(val_quiz.getOptionA());
-//        radioButton_optionB.setText(val_quiz.getOptionB());
-//        radioButton_optionC.setText(val_quiz.getOptionC());
-
-//        btn_send.setOnClickListener(view -> {
-//            isCorrect = Character.toLowerCase(selectedOption) == Character.toLowerCase(val_quiz.getCorrectOption());
-//
-//            Intent intent = new Intent(Game.this, AnswerResult.class);
-//            intent.putExtra("win", isCorrect);
-//            startActivity(intent);
-//        });
-
-        // Generate quiz question in a thread
-//        new Thread(() -> {
-//            val_quiz = QuizGenerator.generateQuizQuestion(QuizGenerator.getAleatoryDifficulty(), QuizGenerator.getAleatoryTopic());
-//
-//            // Update UI in main thread
-//            new Handler(Looper.getMainLooper()).post(() -> {
-//
-//                System.out.println("val_quiz => " + val_quiz);
-//                System.out.println("");
-//                System.out.println("Option A => " + val_quiz.getOptionA());
-//                System.out.println("Option B => " + val_quiz.getOptionB());
-//                System.out.println("Option C => " + val_quiz.getOptionC());
-//
-//                // Set question and options
-//                textView_question.setText(val_quiz.getQuestion());
-//                radioButton_optionA.setText(val_quiz.getOptionA());
-//                radioButton_optionB.setText(val_quiz.getOptionB());
-//                radioButton_optionC.setText(val_quiz.getOptionC());
-//            });
-//        }).start();
-
-        someStupidMethod();
+        createQuiz();
     }
 
-    private void someStupidMethod() {
-        // Customization
-        String level = "Difficulty: " + QuizGenerator.getAleatoryDifficulty().toString().toLowerCase();
-        String subject = "Topic: " + QuizGenerator.getAleatoryTopic().toString().toLowerCase();
+    private void createQuiz() {
 
-        String prompt = String.format("Generate a random question about general culture and provide three possible answer options classified with the letters A, B, and C, being only one the correct answer, finally provide the letter of the correct option. %s, %s." +
-                "Use the following structure: Q: Some question. A) Some option. B) Some option. C) Some option. Answer: Some answer.", subject, level);
+        Global app = (Global) getApplication();
+
+        // Customization
+        QuizGenerator.Difficulty selectedDifficulty = app.getDifficulty();
+        QuizGenerator.Topic selectedTopic = app.getTopic();
+        Global.LANGUAGES language = app.getLanguage();
+
+        String prompt = QuizGenerator.generatePrompt(selectedDifficulty, selectedTopic, language);
         String apiKey = System.getenv("OPENAI_API_KEY");
         int maxTokens = 200;
 
@@ -119,11 +79,9 @@ public class Game extends AppCompatActivity {
         JSONObject jsonBody = new JSONObject();
         try {
             jsonBody.put("prompt", prompt);
-//            jsonBody.put("truncate", "END");
             jsonBody.put("model", "text-davinci-003");
 
             jsonBody.put("max_tokens", maxTokens);
-//            jsonBody.put("return_likelihoods", "NONE");
         } catch (JSONException error) {
             error.printStackTrace();
         }
@@ -168,20 +126,28 @@ public class Game extends AppCompatActivity {
                     String result = jsonArray.getJSONObject(0).getString("text");
                     System.out.println("result => " + result);
 
-                    String question = result.substring(result.indexOf("Q:") + 3, result.indexOf("A)")).replace("\n", "");
+                    String questionKey = QuizGenerator.QuestionKeyDictionary.getKey(language).getValue() + ":";
+                    boolean isQuestionKeyOnResponse = (result.indexOf(questionKey) == -1 ? false : true);
+                    String finalQuestionKey = isQuestionKeyOnResponse ? questionKey : QuizGenerator.QuestionKeyDictionary.ENGLISH.getValue() + ":";
+
+                    String answerKey = QuizGenerator.AnswerKeyDictionary.getKey(language).getValue() + ":";
+                    boolean isAnswerKeyOnResponse = (result.indexOf(answerKey) == -1 ? false : true);
+                    String finalAnswerKey = isAnswerKeyOnResponse ? answerKey : QuizGenerator.AnswerKeyDictionary.ENGLISH.getValue() + ":";
+
+                    String question = result.substring(result.indexOf(finalQuestionKey) + finalQuestionKey.length() + 1, result.indexOf("A)")).replace("\n", "");
                     System.out.println("question => " + question);
 
                     // Extract answer options
                     String optionA = result.substring(result.indexOf("A)"), result.indexOf("B)")).replace("\n", "");
                     String optionB = result.substring(result.indexOf("B)"), result.indexOf("C)")).replace("\n", "");
-                    String optionC = result.substring(result.indexOf("C)"), result.indexOf("Answer:")).replace("\n", "");
+                    String optionC = result.substring(result.indexOf("C)"), result.indexOf(finalAnswerKey)).replace("\n", "");
 
                     System.out.println("optionA => " + optionA);
                     System.out.println("optionB => " + optionB);
                     System.out.println("optionC => " + optionC);
 
                     // Extract correct answer option
-                    char answer = result.charAt(result.indexOf("Answer:") + 7 + 1);
+                    char answer = result.charAt(result.indexOf(finalAnswerKey) + finalAnswerKey.length() + 1);
 
                     System.out.println("answer => " + answer);
 

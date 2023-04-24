@@ -14,18 +14,18 @@
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        app:layout_constraintTop_toBottomOf="@+id/textView_guide" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/textView_guide"
         android:layout_width="114dp"
-        android:layout_height="65dp"
-        android:layout_marginTop="124dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="92dp"
         android:text="@string/text_guide"
         android:textAlignment="center"
         android:textSize="34sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -37,10 +37,8 @@
         android:text="@string/btn_play"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.495"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView_rule4"
-        app:layout_constraintVertical_bias="0.81" />
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/textView_rule1"
@@ -57,7 +55,7 @@
         android:id="@+id/textView_rule2"
         android:layout_width="303dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="28dp"
         android:text="@string/text_rule_2"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -68,7 +66,7 @@
         android:id="@+id/textView_rule3"
         android:layout_width="303dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="32dp"
         android:text="@string/text_rule_3"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -82,8 +80,10 @@
         android:layout_marginTop="24dp"
         android:text="@string/text_rule_4"
         android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/btn_play"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView_rule3" />
+        app:layout_constraintTop_toBottomOf="@+id/textView_rule3"
+        app:layout_constraintVertical_bias="0.092" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

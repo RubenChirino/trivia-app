@@ -28,13 +28,14 @@ public class QuizGenerator {
 
     static OkHttpClient client = new OkHttpClient();
 
-    enum Difficulty {
+    public enum Difficulty {
         EASY,
         MEDIUM,
         HARD,
+        RANDOM,
     }
 
-    enum Topic {
+    public enum Topic {
         HISTORY,
         SCIENCE,
         LITERATURE,
@@ -44,16 +45,74 @@ public class QuizGenerator {
         MUSIC,
         MOVIES,
         TV_SHOWS,
-        OTHER
+        RANDOM
+    };
+
+    public enum AnswerKeyDictionary {
+        ENGLISH("Answer"),
+        SPANISH("Respuesta"),
+        FRENCH("Réponse"),
+        PORTUGUESE("Resposta");
+
+        private final String value;
+
+        AnswerKeyDictionary(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public static AnswerKeyDictionary getKey(Global.LANGUAGES language) {
+            for (AnswerKeyDictionary key : AnswerKeyDictionary.values()) {
+                if (key.name().equalsIgnoreCase(language.toString().toUpperCase())) {
+                    return key;
+                }
+            }
+            return null;
+        }
     }
 
-    public static QuizQuestion generateQuizQuestion(Difficulty difficulty, Topic topic) {
+    public enum QuestionKeyDictionary {
+        ENGLISH("Question"),
+        SPANISH("Pregunta"),
+        FRENCH("Demander"),
+        PORTUGUESE("Questão");
+
+        private final String value;
+
+        QuestionKeyDictionary(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public static QuestionKeyDictionary getKey(Global.LANGUAGES language) {
+            for (QuestionKeyDictionary key : QuestionKeyDictionary.values()) {
+                if (key.name().equalsIgnoreCase(language.toString().toUpperCase())) {
+                    return key;
+                }
+            }
+            return null;
+        }
+    };
+
+    public static String generatePrompt(Difficulty difficulty, Topic topic, Global.LANGUAGES language) {
+        String level = "Difficulty: " + (difficulty.equals(Difficulty.RANDOM) ? QuizGenerator.getAleatoryDifficulty() : difficulty.toString().toLowerCase());
+        String subject = "Topic: " + (topic.equals(Topic.RANDOM) ? QuizGenerator.getAleatoryTopic() : topic.toString().toLowerCase()) ;
+        String idiom = "Language: " + language.toString().toLowerCase();
+        String responseStructure = "In your response, use the following structure: Question: Question. A) Option. B) Option. C) Option. Answer: Answer. Please make sure the provide the whole response using the selected language.";
+        return String.format("Generate a random question about general culture and provide three possible answer options classified with the letters A, B, and C, being only one the correct answer, finally provide the letter of the correct option. %s %s, %s. \n" + responseStructure, idiom, subject, level);
+    }
+
+    public static QuizQuestion generateQuizQuestion(Difficulty difficulty, Topic topic, Global.LANGUAGES language) {
 
         // Customization
-        String level = "Difficulty: " + difficulty.toString().toLowerCase();
-        String subject = "Topic: " + topic.toString().toLowerCase();
+        String prompt = generatePrompt(difficulty, topic, language);
 
-        String prompt = String.format("Generate a random question about general culture and three answer options (classified with the letters A, B, and C, being only one the correct answer), and the letter of the correct option. %s, %s", subject, level);
         String apiKey = System.getenv("OPENAI_API_KEY_2");
         String model = "text-curie:001"; // text-curie:001 | text-davinci-003
         int maxTokens = 200;
@@ -69,18 +128,6 @@ public class QuizGenerator {
 //        String response = openAiLibrary(apiKey, prompt, model, maxTokens, optionsNumber);
 //        String response = openAiRequest(apiKey, prompt, model, maxTokens, temperature);
         String response = cohereAiRequest(apiKey, prompt, maxTokens);
-
-        System.out.println("response (OPEN AI) => " + response);
-
-//        String question = response.substring(response.indexOf("Question:") + 9, response.indexOf("A)"));
-//
-//        // Extract answer options
-//        String optionA = response.substring(response.indexOf("A)") + 2, response.indexOf("B)"));
-//        String optionB = response.substring(response.indexOf("B)") + 2, response.indexOf("C)"));
-//        String optionC = response.substring(response.indexOf("C)") + 2, response.indexOf("Correct answer"));
-//
-//        // Extract correct answer option
-//        char answer = response.charAt(response.indexOf("Correct answer:") + 15 + 2);
 
         return new QuizQuestion("Test", "Test A", "Test B", "Test C", 'A'); // new QuizQuestion(question, optionA, optionB, optionC, answer);
     }
@@ -173,19 +220,6 @@ public class QuizGenerator {
     }
 
     private static String cohereAiRequest(String apiKey, String prompt, int maxTokens) {
-//        AsyncHttpClient client = new DefaultAsyncHttpClient();
-//        client.prepare("POST", "https://api.cohere.ai/v1/generate")
-//                .setHeader("accept", "application/json")
-//                .setHeader("content-type", "application/json")
-//                .setHeader("authorization", "Bearer ")
-//                .setBody("{\"max_tokens\":20,\"return_likelihoods\":\"NONE\",\"truncate\":\"END\",\"prompt\":\"Once upon a time in a magical land called\"}")
-//                .execute()
-//                .toCompletableFuture()
-//                .thenAccept(System.out::println)
-//                .join();
-//
-//        client.close();
-
         JSONObject jsonBody = new JSONObject();
         try {
             jsonBody.put("prompt", prompt);
