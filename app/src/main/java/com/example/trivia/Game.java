@@ -71,7 +71,7 @@ public class Game extends AppCompatActivity {
         Global.LANGUAGES language = app.getLanguage();
 
         String prompt = QuizGenerator.generatePrompt(selectedDifficulty, selectedTopic, language);
-        String apiKey = "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"; // System.getenv("OPENAI_API_KEY");
+        String apiKey = System.getenv("OPENAI_API_KEY");
         int maxTokens = 200;
 
         System.out.println("apiKey => " + apiKey);
