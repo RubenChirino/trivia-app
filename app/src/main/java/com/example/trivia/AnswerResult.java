@@ -13,6 +13,7 @@ public class AnswerResult extends AppCompatActivity {
     TextView textView_answerResultTitle;
     TextView textView_score;
     Button button_playAgain;
+    Button button_home;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,10 +45,16 @@ public class AnswerResult extends AppCompatActivity {
 
         // Find elements
         button_playAgain = findViewById(R.id.button_playAgain);
+        button_home = findViewById(R.id.button_home);
 
         // Set Values & Methods
         button_playAgain.setOnClickListener(view -> {
             Intent next = new Intent(AnswerResult.this, Game.class);
+            startActivity(next);
+        });
+
+        button_home.setOnClickListener(view -> {
+            Intent next = new Intent(AnswerResult.this, MainActivity.class);
             startActivity(next);
         });
 
